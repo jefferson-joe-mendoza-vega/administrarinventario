@@ -98,27 +98,6 @@
             margin-bottom: 20px;
             color: #2c3e50;
         }
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-        }
-        /* Mejorar la apariencia de los botones */
-        .btn-primary {
-            background-color: #3498db;
-            border-color: #3498db;
-        }
-        .btn-primary:hover {
-            background-color: #2980b9;
-            border-color: #2980b9;
-        }
-        .btn-secondary {
-            background-color: #95a5a6;
-            border-color: #95a5a6;
-        }
-        .btn-secondary:hover {
-            background-color: #7f8c8d;
-            border-color: #7f8c8d;
-        }
     </style>
 </head>
 <body>
@@ -198,13 +177,6 @@
                 </div>
             </div>
 
-            <!-- Indicador de Carga -->
-            <div id="loadingIndicator" class="d-flex justify-content-center align-items-center" style="display: none;">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-            </div>
-
             <!-- Estadísticas clave -->
             <div class="row">
                 <div class="col-md-4">
@@ -279,16 +251,6 @@
         let salesData = []; // Array para almacenar ventas
         let filteredSales = []; // Array para almacenar ventas filtradas
 
-        // Función para mostrar el indicador de carga
-        function showLoading() {
-            document.getElementById('loadingIndicator').style.display = 'flex';
-        }
-
-        // Función para ocultar el indicador de carga
-        function hideLoading() {
-            document.getElementById('loadingIndicator').style.display = 'none';
-        }
-
         // Función para cargar productos y llenar el filtro
         async function loadProducts() {
             const productFilter = document.getElementById('productFilter');
@@ -314,7 +276,6 @@
 
         // Función para cargar ventas
         async function loadSales() {
-            showLoading();
             salesData = []; // Reiniciar el arreglo para evitar duplicados
 
             try {
@@ -336,57 +297,50 @@
             } catch (error) {
                 Swal.fire('Error', 'Hubo un problema al cargar las ventas.', 'error');
                 console.error("Error al cargar ventas:", error);
-            } finally {
-                hideLoading();
             }
         }
 
         // Función para actualizar el reporte
         async function updateReport() {
-            try {
-                // Calcular total de ventas
-                const totalSales = filteredSales.reduce((acc, sale) => acc + sale.cantidad, 0);
+            // Calcular total de ventas
+            const totalSales = filteredSales.reduce((acc, sale) => acc + sale.cantidad, 0);
 
-                // Calcular total de ingresos
-                let totalRevenue = 0;
-                filteredSales.forEach(sale => {
-                    const product = products.find(p => p.id === sale.productId);
-                    if (product) {
-                        totalRevenue += sale.cantidad * product.precioVenta;
-                    }
-                });
-
-                // Calcular producto más vendido
-                const productSales = {};
-                filteredSales.forEach(sale => {
-                    if (productSales[sale.producto]) {
-                        productSales[sale.producto] += sale.cantidad;
-                    } else {
-                        productSales[sale.producto] = sale.cantidad;
-                    }
-                });
-
-                let bestSellingProduct = "N/A";
-                let maxSales = 0;
-                for (const [product, sales] of Object.entries(productSales)) {
-                    if (sales > maxSales) {
-                        maxSales = sales;
-                        bestSellingProduct = product;
-                    }
+            // Calcular total de ingresos
+            let totalRevenue = 0;
+            filteredSales.forEach(sale => {
+                const product = products.find(p => p.id === sale.productId);
+                if (product) {
+                    totalRevenue += sale.cantidad * product.precioVenta;
                 }
+            });
 
-                // Actualizar el DOM con las estadísticas
-                document.getElementById('totalSales').textContent = totalSales;
-                document.getElementById('bestSellingProduct').textContent = bestSellingProduct;
-                document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+            // Calcular producto más vendido
+            const productSales = {};
+            filteredSales.forEach(sale => {
+                if (productSales[sale.producto]) {
+                    productSales[sale.producto] += sale.cantidad;
+                } else {
+                    productSales[sale.producto] = sale.cantidad;
+                }
+            });
 
-                // Actualizar los gráficos
-                loadSalesChart(productSales);
-                loadMonthlySalesChart();
-            } catch (error) {
-                Swal.fire('Error', 'Hubo un problema al actualizar los reportes.', 'error');
-                console.error("Error al actualizar reportes:", error);
+            let bestSellingProduct = "N/A";
+            let maxSales = 0;
+            for (const [product, sales] of Object.entries(productSales)) {
+                if (sales > maxSales) {
+                    maxSales = sales;
+                    bestSellingProduct = product;
+                }
             }
+
+            // Actualizar el DOM con las estadísticas
+            document.getElementById('totalSales').textContent = totalSales;
+            document.getElementById('bestSellingProduct').textContent = bestSellingProduct;
+            document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
+
+            // Actualizar los gráficos
+            loadSalesChart(productSales);
+            loadMonthlySalesChart();
         }
 
         // Función para cargar el gráfico de ventas por producto
@@ -506,9 +460,51 @@
             const date = document.getElementById('dateFilter').value;
             const month = document.getElementById('monthFilter').value;
 
-            try {
-                filteredSales = salesData.filter(sale => {
-                    let matches = true;
+            filteredSales = salesData.filter(sale => {
+                let matches = true;
 
-                    if (productId) {
-                        matches = mat
+                if (productId) {
+                    matches = matches && (sale.productId === productId);
+                }
+
+                if (date) {
+                    const saleDate = sale.fechaHora.toISOString().split('T')[0];
+                    matches = matches && (saleDate === date);
+                }
+
+                if (month) {
+                    const saleMonth = sale.fechaHora.toISOString().substring(0,7); // YYYY-MM
+                    matches = matches && (saleMonth === month);
+                }
+
+                return matches;
+            });
+
+            updateReport();
+        }
+
+        // Función para limpiar filtros
+        function clearFilters() {
+            document.getElementById('productFilter').value = "";
+            document.getElementById('dateFilter').value = "";
+            document.getElementById('monthFilter').value = "";
+            filteredSales = [...salesData];
+            updateReport();
+        }
+
+        // Asignar eventos a los botones de filtros
+        document.getElementById('filterButton').addEventListener('click', applyFilters);
+        document.getElementById('clearFiltersButton').addEventListener('click', clearFilters);
+
+        // Función para inicializar la página
+        async function init() {
+            await loadProducts();
+            await loadSales();
+        }
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</body>
+</html>
