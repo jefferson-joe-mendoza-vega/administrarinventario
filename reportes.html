@@ -98,6 +98,27 @@
             margin-bottom: 20px;
             color: #2c3e50;
         }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        /* Mejorar la apariencia de los botones */
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            border-color: #95a5a6;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+            border-color: #7f8c8d;
+        }
     </style>
 </head>
 <body>
@@ -177,6 +198,13 @@
                 </div>
             </div>
 
+            <!-- Indicador de Carga -->
+            <div id="loadingIndicator" class="d-flex justify-content-center align-items-center" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+
             <!-- Estadísticas clave -->
             <div class="row">
                 <div class="col-md-4">
@@ -251,6 +279,16 @@
         let salesData = []; // Array para almacenar ventas
         let filteredSales = []; // Array para almacenar ventas filtradas
 
+        // Función para mostrar el indicador de carga
+        function showLoading() {
+            document.getElementById('loadingIndicator').style.display = 'flex';
+        }
+
+        // Función para ocultar el indicador de carga
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+
         // Función para cargar productos y llenar el filtro
         async function loadProducts() {
             const productFilter = document.getElementById('productFilter');
@@ -276,6 +314,7 @@
 
         // Función para cargar ventas
         async function loadSales() {
+            showLoading();
             salesData = []; // Reiniciar el arreglo para evitar duplicados
 
             try {
@@ -297,6 +336,8 @@
             } catch (error) {
                 Swal.fire('Error', 'Hubo un problema al cargar las ventas.', 'error');
                 console.error("Error al cargar ventas:", error);
+            } finally {
+                hideLoading();
             }
         }
 
@@ -343,152 +384,131 @@
                 loadSalesChart(productSales);
                 loadMonthlySalesChart();
             } catch (error) {
-                Swal.fire('Error', 'Hubo un problema al actualizar el reporte.', 'error');
-                console.error("Error al actualizar reporte:", error);
+                Swal.fire('Error', 'Hubo un problema al actualizar los reportes.', 'error');
+                console.error("Error al actualizar reportes:", error);
             }
         }
 
         // Función para cargar el gráfico de ventas por producto
         function loadSalesChart(productSales) {
-            try {
-                const ctx = document.getElementById('salesChart').getContext('2d');
+            const ctx = document.getElementById('salesChart').getContext('2d');
 
-                // Destruir el gráfico existente si ya existe
-                if (window.salesChartInstance) {
-                    window.salesChartInstance.destroy();
-                }
+            // Destruir el gráfico existente si ya existe
+            if (window.salesChartInstance) {
+                window.salesChartInstance.destroy();
+            }
 
-                const salesLabels = Object.keys(productSales);
-                const salesValues = Object.values(productSales);
+            const salesLabels = Object.keys(productSales);
+            const salesValues = Object.values(productSales);
 
-                window.salesChartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: salesLabels,
-                        datasets: [{
-                            label: 'Ventas por Producto',
-                            data: salesValues,
-                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return `Ventas: ${context.parsed.y}`;
-                                    }
+            window.salesChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: salesLabels,
+                    datasets: [{
+                        label: 'Ventas por Producto',
+                        data: salesValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Ventas: ${context.parsed.y}`;
                                 }
                             }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { precision:0 }
-                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision:0 }
                         }
                     }
-                });
-            } catch (error) {
-                Swal.fire('Error', 'Hubo un problema al cargar el gráfico de ventas por producto.', 'error');
-                console.error("Error al cargar salesChart:", error);
-            }
+                }
+            });
         }
 
         // Función para cargar el gráfico de ventas por mes
         function loadMonthlySalesChart() {
-            try {
-                const ctx = document.getElementById('monthlySalesChart').getContext('2d');
+            const ctx = document.getElementById('monthlySalesChart').getContext('2d');
 
-                // Destruir el gráfico existente si ya existe
-                if (window.monthlySalesChartInstance) {
-                    window.monthlySalesChartInstance.destroy();
+            // Destruir el gráfico existente si ya existe
+            if (window.monthlySalesChartInstance) {
+                window.monthlySalesChartInstance.destroy();
+            }
+
+            // Agrupar ventas por mes
+            const monthlySales = {};
+            filteredSales.forEach(sale => {
+                const month = sale.fechaHora.toLocaleString('es-PE', { month: 'long', year: 'numeric' });
+                if (monthlySales[month]) {
+                    monthlySales[month] += sale.cantidad;
+                } else {
+                    monthlySales[month] = sale.cantidad;
                 }
+            });
 
-                // Agrupar ventas por mes
-                const monthlySales = {};
-                filteredSales.forEach(sale => {
-                    const month = sale.fechaHora.toLocaleString('es-PE', { month: 'long', year: 'numeric' });
-                    if (monthlySales[month]) {
-                        monthlySales[month] += sale.cantidad;
-                    } else {
-                        monthlySales[month] = sale.cantidad;
-                    }
-                });
+            const monthlyLabels = Object.keys(monthlySales).sort((a, b) => {
+                // Ordenar cronológicamente
+                const dateA = new Date(a);
+                const dateB = new Date(b);
+                return dateA - dateB;
+            });
+            const monthlyValues = monthlyLabels.map(label => monthlySales[label]);
 
-                const monthlyLabels = Object.keys(monthlySales).sort((a, b) => {
-                    // Ordenar cronológicamente
-                    const dateA = new Date(a);
-                    const dateB = new Date(b);
-                    return dateA - dateB;
-                });
-                const monthlyValues = monthlyLabels.map(label => monthlySales[label]);
-
-                window.monthlySalesChartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: monthlyLabels,
-                        datasets: [{
-                            label: 'Ventas por Mes',
-                            data: monthlyValues,
-                            fill: true,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            tension: 0.3,
-                            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                            pointRadius: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return `Ventas: ${context.parsed.y}`;
-                                    }
+            window.monthlySalesChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: monthlyLabels,
+                    datasets: [{
+                        label: 'Ventas por Mes',
+                        data: monthlyValues,
+                        fill: true,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        tension: 0.3,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Ventas: ${context.parsed.y}`;
                                 }
                             }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { precision:0 }
-                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision:0 }
                         }
                     }
-                });
-            } catch (error) {
-                Swal.fire('Error', 'Hubo un problema al cargar el gráfico de ventas por mes.', 'error');
-                console.error("Error al cargar monthlySalesChart:", error);
-            }
+                }
+            });
         }
 
         // Función para aplicar filtros
         function applyFilters() {
-            try {
-                const productId = document.getElementById('productFilter').value;
-                const date = document.getElementById('dateFilter').value;
-                const month = document.getElementById('monthFilter').value;
+            const productId = document.getElementById('productFilter').value;
+            const date = document.getElementById('dateFilter').value;
+            const month = document.getElementById('monthFilter').value;
 
+            try {
                 filteredSales = salesData.filter(sale => {
                     let matches = true;
 
                     if (productId) {
-                        matches = matches && (sale.productId === productId);
-                    }
-
-                    if (date) {
-                        const saleDate = sale.fechaHora.toISOString().split('T')[0];
-                        matches = matches && (saleDate === date);
-                    }
-
-                    if (month) {
-                        const saleMonth = sale.fechaHora.toISOString().substring(0,7); // YYYY-MM
-                        matches = matches && (saleMonth === month);
-                   
+                        matches = mat
