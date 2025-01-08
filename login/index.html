@@ -1,0 +1,105 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autenticación con Google</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      background-color: #ffffff;
+      color: #2575fc;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 30px;
+      font-size: 1em;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2575fc;
+      color: #fff;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    #userInfo {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Iniciar sesión con Google</h1>
+  <button id="googleLogin">Iniciar sesión con Google</button>
+  <div id="userInfo"></div>
+
+  <script type="module">
+    // Importa las funciones necesarias de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+  apiKey: "AIzaSyASIRckSRbp2DFJZIIgMMAXg4BsBnntWnc",
+  authDomain: "administrarinventario.firebaseapp.com",
+  projectId: "administrarinventario",
+  storageBucket: "administrarinventario.firebasestorage.app",
+  messagingSenderId: "991218574772",
+  appId: "1:991218574772:web:4ba26113a8e6a19128bee1",
+  measurementId: "G-JWW1WQCVHH"
+};
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Proveedor de Google
+    const provider = new GoogleAuthProvider();
+
+    // Elementos de la interfaz
+    const googleLoginBtn = document.getElementById("googleLogin");
+    const userInfoDiv = document.getElementById("userInfo");
+
+    // Función para iniciar sesión con Google
+    googleLoginBtn.addEventListener("click", async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Verifica si el correo es el autorizado
+        if (user.email === "fredy22taipe@gmail.com" || user.email === "jefferson.menve@gmail.com" || user.email === "fideltaipe2002@gmail.com") {
+          // Redirige al archivo autorizado.html
+          window.location.href = "../index.html";
+        } else {
+          // Redirige a la URL no autorizada
+          window.location.href = "https://favo-store.web.app/tienda/";
+        }
+      } catch (error) {
+        console.error("Error durante el inicio de sesión:", error.message);
+      }
+    });
+  </script>
+</body>
+</html>

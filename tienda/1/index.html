@@ -1,0 +1,1203 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Zapatillas</title>
+    <meta name="description" content="FAVO STORE - Tu tienda online de confianza para las mejores zapatillas. Descubre nuestra amplia variedad de productos con calidad garantizada.">
+    <meta name="keywords" content="FAVO STORE, zapatillas, tienda online, calzado, moda">
+    <meta name="author" content="FAVO STORE">
+
+    <!-- Open Graph Meta Tags para Redes Sociales (Facebook, WhatsApp, etc.) -->
+    <meta property="og:title" content="FAVO STORE">
+    <meta property="og:description" content="Descubre las mejores zapatillas en FAVO STORE. Calidad y estilo a tu alcance.">
+    <meta property="og:image" content="https://i.ibb.co/mTJZd8c/image.png">
+    <meta property="og:url" content="https://favo-store.web.app/tienda/">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FAVO STORE">
+    <meta name="twitter:description" content="Descubre las mejores zapatillas en FAVO STORE. Calidad y estilo a tu alcance.">
+    <meta name="twitter:image" content="https://i.ibb.co/mTJZd8c/image.png">
+        
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+      <!-- Agregar FontAwesome para el ícono de WhatsApp -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff; /* Blanco */
+            padding-top: 70px; /* Altura de la barra de navegación */
+            overflow-x: hidden;
+            color: #000000; /* Texto principal en negro */
+            scroll-behavior: smooth; /* Suaviza el desplazamiento */
+        }
+        /* Barra de Navegación */
+        .navbar {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background-color: #000000 !important; /* Negro */
+            transition: background-color 0.3s;
+        }
+        .navbar-brand img {
+            height: 50px; /* Tamaño del logo */
+            transition: transform 0.3s;
+        }
+        .navbar-brand img:hover {
+            transform: scale(1.1);
+        }
+        .cart-icon {
+            position: relative;
+            color: #ffffff; /* Icono en blanco */
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .cart-icon:hover {
+            color: #dc3545; /* Rojo al pasar el cursor */
+        }
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: #dc3545; /* Rojo */
+            color: #ffffff;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+        }
+        /* Sección de Dirección */
+        .address-section {
+            background-color: #f8f9fa; /* Fondo gris claro */
+            padding: 20px 0;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .address-section a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .address-section a:hover {
+            color: #dc3545; /* Rojo al pasar el cursor */
+        }
+        /* Sección de Contacto */
+        .contact-section {
+            background-color: #000000; /* Negro */
+            color: #ffffff; /* Texto en blanco */
+            padding: 40px 0;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .contact-icons a {
+            color: #ffffff;
+            margin: 0 15px;
+            font-size: 2.5rem;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .contact-icons a:hover {
+            color: #dc3545; /* Rojo al pasar el cursor */
+            transform: scale(1.2);
+        }
+        /* Buscador y Filtro con position: sticky */
+        .search-filter-container {
+            position: -webkit-sticky; /* Soporte para Safari */
+            position: sticky;
+            top: 70px; /* Altura de la barra de navegación */
+            background-color: #ffffff; /* Blanco */
+            padding: 10px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            animation: slideDown 1s ease-out;
+        }
+        /* Ajustar el margen superior del contenido principal */
+        .main-content {
+            margin-top: 0; /* Sin margen adicional */
+        }
+        /* Portada */
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Negro semi-transparente */
+            z-index: 1;
+        }
+        .carousel-inner img {
+            height: 100vh;
+            object-fit: cover;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item.active img {
+            animation: zoomIn 2s forwards;
+        }
+        .carousel-item img {
+            transform: scale(1.1);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 2s ease-out;
+        }
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            animation: fadeIn 3s ease-in-out;
+        }
+        .hero-content .btn-primary {
+            background-color: #dc3545; /* Rojo */
+            border-color: #dc3545;
+            padding: 10px 30px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .hero-content .btn-primary:hover {
+            background-color: #bb2d3b; /* Rojo oscuro al pasar el cursor */
+            border-color: #bb2d3b;
+            transform: scale(1.05);
+        }
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(1.1); }
+            to { transform: scale(1); }
+        }
+        /* Tarjeta de Producto */
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #ffffff; /* Blanco */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            animation: fadeIn 1s ease-in-out;
+            cursor: pointer; /* Cambia el cursor al pasar sobre la tarjeta */
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        .product-details {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000000; /* Negro */
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .product-title:hover {
+            color: #dc3545; /* Rojo al pasar el cursor */
+        }
+        .product-price {
+            font-size: 1.1rem;
+            color: #dc3545; /* Rojo */
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .size-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .size-list li {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .size-list li:hover {
+            background-color: #dc3545;
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+        .add-to-cart-btn {
+            background-color: #dc3545; /* Rojo */
+            border-color: #dc3545;
+            margin-top: auto;
+            transition: background-color 0.3s, transform 0.3s;
+            color: #ffffff; /* Texto en blanco */
+        }
+        .add-to-cart-btn:hover {
+            background-color: #bb2d3b; /* Rojo oscuro */
+            transform: scale(1.05);
+        }
+        /* Spinner de Carga */
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+        }
+        /* Modal del Carrito */
+        .modal-header {
+            background-color: #000000; /* Negro */
+            color: #ffffff; /* Texto en blanco */
+            animation: fadeIn 1s ease-in-out;
+        }
+        .modal-footer {
+            background-color: #ffffff; /* Blanco */
+            animation: fadeIn 1s ease-in-out;
+        }
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        .cart-item img:hover {
+            transform: scale(1.1);
+        }
+        .cart-item-title {
+            font-weight: 600;
+            color: #000000; /* Negro */
+        }
+        .cart-item-price {
+            color: #dc3545; /* Rojo */
+            font-weight: 700;
+        }
+        /* Botones del Modal */
+        .modal-footer .btn-secondary {
+            background-color: #6c757d; /* Gris oscuro */
+            border-color: #6c757d;
+            color: #ffffff;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .modal-footer .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+        .modal-footer .btn-primary {
+            background-color: #dc3545; /* Botón rojo */
+            border-color: #dc3545;
+            color: #ffffff;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .modal-footer .btn-primary:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        /* Footer */
+        footer.contact-section {
+            background-color: #000000; /* Negro */
+            color: #ffffff; /* Blanco */
+            padding: 20px 0;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        /* Modal de Detalles del Producto Mejorado */
+        .modal-body {
+            /* Utilizar padding y espacio */
+            padding: 20px;
+        }
+        /* Layout para el contenido del modal */
+        .product-modal-content {
+            display: flex;
+            flex-direction: column;
+        }
+        @media (min-width: 768px) {
+            .product-modal-content {
+                flex-direction: row;
+            }
+            .modal-image-section,
+            .modal-details-section {
+                flex: 1;
+            }
+            .modal-image-section {
+                padding-right: 15px;
+            }
+            .modal-details-section {
+                padding-left: 15px;
+            }
+        }
+        .modal-image-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            max-height: 400px;
+        }
+        .modal-details-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .modal-details-section p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .modal-details-section ul.size-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .modal-details-section ul.size-list li {
+            margin-right: 10px;
+        }
+        /* Estilo del botón flotante */
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #25d366; /* Color verde de WhatsApp */
+            color: white;
+            font-size: 30px; /* Tamaño del ícono */
+            border-radius: 50%;
+            text-align: center;
+            line-height: 60px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            z-index: 1000; /* Asegura que el botón esté encima de otros elementos */
+        }
+
+        /* Efecto cuando se pasa el mouse sobre el botón */
+        .floating-button:hover {
+            background-color: #128c7e; /* Color verde oscuro de WhatsApp */
+        }
+
+        /* Ocultar todo el contenido excepto el botón */
+        .hide-content {
+            display: none;
+        }
+
+        /* Nuevo Estilo para Filtros de Categoría */
+        .category-filter {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://wa.me/51915950262" class="floating-button" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../../login/">
+                <img src="https://i.ibb.co/2dbKm7M/FAVO-PNG.png" alt="Logo de la Tienda">
+            </a>            
+            <div class="ms-auto">
+                <div class="cart-icon" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <i class="bi bi-cart-fill fs-4"></i>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Portada con Carrusel -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div id="heroCarousel" class="carousel slide w-100 h-100" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://i.ibb.co/C011xZ3/image.png" class="d-block w-100" alt="Imagen 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://i.ibb.co/MhJ5gjY/image.png" class="d-block w-100" alt="Imagen 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://i.ibb.co/tmWkm6B/image.png" class="d-block w-100" alt="Imagen 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+        <div class="hero-content">
+            <h1>Encuentra las Zapatillas Perfectas</h1>
+            <p>👉𝗩𝗘𝗡𝗧𝗔 𝗗𝗘 𝗭𝗔𝗣𝗔𝗧𝗜𝗟𝗟𝗔𝗦 𝗬 𝗖𝗛𝗜𝗠𝗣𝗨𝗡𝗘𝗦 𝗗𝗘𝗣𝗢𝗥𝗧𝗜𝗩𝗢𝗦👈<br>
+                𝗔𝗗𝗜𝗗𝗔𝗦,𝗡𝗜𝗞𝗘,𝗣𝗨𝗠𝗔,𝗝𝗢𝗠𝗔,𝗠𝗨𝗡𝗜𝗖𝗛
+                <br>
+                𝗟𝗔 𝗖𝗔𝗦𝗔 𝗗𝗘 𝗟𝗔𝗦 𝗖𝗛𝗢𝗖𝗢𝗟𝗔𝗧𝗘𝗥𝗔𝗦🍫</p>
+            <a href="#productos" class="btn btn-primary">Explorar Productos</a>
+        </div>
+    </section>
+
+    <!-- Sección de Dirección -->
+    <section class="address-section">
+        <div class="container">
+            <p>📍 <a href="https://www.google.com/maps?q=Jir%C3%B3n+Moyobamba+N%C2%B0+100,+Caja+de+Agua,+San+Juan+de+Lurigancho,+Lima,+Per%C3%BA&z=16" target="_blank">Jirón Moyobamba N° 100, Caja de Agua, San Juan de Lurigancho</a></p>
+        </div>
+    </section>
+
+    <!-- Contenedor Principal -->
+    <div class="container my-5 main-content" id="productos">
+        <h2 class="mb-4 text-center text-primary"><i class="bi bi-bag me-2"></i>Nuestros Productos</h2>
+        <!-- Buscador y Filtro -->
+        <div class="search-filter-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar productos...">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select id="brandFilter" class="form-select">
+                            <option value="">Filtrar por marca</option>
+                            <!-- Las marcas se cargarán dinámicamente aquí -->
+                        </select>
+                    </div>
+                    <!-- Nuevo Selector de Categoría -->
+                    <div class="col-md-4 mb-2">
+                        <select id="categoryFilter" class="form-select">
+                            <option value="">Filtrar por categoría</option>
+                            <option value="Zapatilla">Zapatilla</option>
+                            <option value="Chimpu">Chimpu</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div id="productsContainer" class="row g-4">
+            <!-- Las tarjetas de productos se insertarán aquí dinámicamente -->
+        </div>
+        <!-- Spinner de Carga -->
+        <div id="loadingSpinner" class="spinner-container">
+            <div class="spinner-border text-danger" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Contacto -->
+    <section class="contact-section">
+        <div class="container">
+            <h2 class="mb-4">Contáctanos</h2>
+            <div class="contact-icons">
+                <!-- Enlaces a Redes Sociales -->
+                <a href="https://wa.me/51915950262" target="_blank" aria-label="WhatsApp">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+                <a href="https://www.tiktok.com/@favostore.pe?_t=8sW9jY3oPtl&_r=1" target="_blank" aria-label="TikTok">
+                    <i class="bi bi-tiktok"></i>
+                </a>
+                <a href="https://www.facebook.com/share/19NqLCN5K9/" target="_blank" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://www.instagram.com/favostore.pe?igsh=MWlzemJ0emw2NXIyZA==" target="_blank" aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                </a>
+                <!-- Puedes agregar más redes sociales aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del Carrito -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart-fill me-2"></i>Carrito de Compras</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItemsContainer">
+                        <!-- Los ítems del carrito se insertarán aquí dinámicamente -->
+                    </div>
+                    <div class="text-end">
+                        <h5>Total: S/<span id="cartTotal">0.00</span></h5>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continuar Comprando</button>
+                    <button type="button" class="btn btn-primary" id="checkoutBtn">Comprar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles del Producto Mejorado -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span id="modalProductTitle"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="product-modal-content">
+                        <!-- Sección de Imágenes -->
+                        <div class="modal-image-section mb-3 mb-md-0">
+                            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators" id="productCarouselIndicators">
+                                    <!-- Indicadores se añadirán dinámicamente -->
+                                </div>
+                                <div class="carousel-inner" id="productCarouselInner">
+                                    <!-- Imágenes se añadirán dinámicamente -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Siguiente</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Sección de Detalles -->
+                        <div class="modal-details-section">
+                            <p><strong>Marca:</strong> <span id="modalProductBrand"></span></p>
+                            <p><strong>Modelo:</strong> <span id="modalProductModel"></span></p>
+                            <p><strong>Precio:</strong> S/<span id="modalProductPrice"></span></p>
+                            <p><strong>Stock Total:</strong> <span id="modalProductStock"></span></p>
+                            <p><strong>Tallas Disponibles:</strong></p>
+                            <ul id="modalProductSizes" class="size-list">
+                                <!-- Tallas se añadirán dinámicamente -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger add-to-cart-btn" id="modalAddToCartBtn">Añadir al Carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="contact-section">
+        <div class="container">
+            <p>&copy; 2024 Tienda de Zapatillas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <!-- Bootstrap Bundle JS (Incluye Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase JS SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, runTransaction, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyASIRckSRbp2DFJZIIgMMAXg4BsBnntWnc",
+            authDomain: "administrarinventario.firebaseapp.com",
+            projectId: "administrarinventario",
+            storageBucket: "administrarinventario.appspot.com",
+            messagingSenderId: "991218574772",
+            appId: "1:991218574772:web:4ba26113a8e6a19128bee1",
+            measurementId: "G-JWW1WQCVHH"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let products = []; // Almacenará todos los productos cargados
+        let filteredProducts = []; // Almacenará los productos filtrados
+        let selectedProduct = null; // Producto seleccionado para detalles
+
+        // Configuración de SweetAlert2 para Toasts
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'bottom-end', // Posición en la esquina inferior derecha
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        // Función para mostrar un toast
+        const showToast = (icon, title) => {
+            Toast.fire({
+                icon: icon,
+                title: title
+            });
+        };
+
+        // Función para crear una tarjeta de producto
+        const createProductCard = (product) => {
+            const { imageUrl, marca, modelo, precioVenta, stockTotal, tallas } = product;
+
+            // Crear elementos
+            const col = document.createElement('div');
+            col.className = 'col-sm-6 col-md-4 col-lg-3';
+
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.dataset.productId = product.id; // Agregar data attribute para identificar el producto
+
+            const img = document.createElement('img');
+            img.src = imageUrl || 'https://via.placeholder.com/300x200?text=Sin+Imagen';
+            img.alt = `${marca} ${modelo}`;
+            img.className = 'product-image';
+            img.setAttribute('loading', 'lazy'); // Mejora de rendimiento
+
+            const cardBody = document.createElement('div');
+            cardBody.className = 'product-details';
+
+            const title = document.createElement('h5');
+            title.className = 'product-title';
+            title.textContent = `${marca} ${modelo}`;
+
+            const price = document.createElement('p');
+            price.className = 'product-price';
+            price.textContent = `S/ ${precioVenta.toFixed(2)}`;
+
+
+            const stock = document.createElement('p');
+            stock.className = 'text-muted';
+            stock.textContent = `Stock Total: ${stockTotal}`;
+
+            const sizesList = document.createElement('ul');
+            sizesList.className = 'size-list';
+            for (const [size, qty] of Object.entries(tallas)) {
+                const li = document.createElement('li');
+                li.textContent = `Talla ${size}: ${qty}`;
+                sizesList.appendChild(li);
+            }
+
+            const addToCartBtn = document.createElement('button');
+            addToCartBtn.className = 'btn btn-danger add-to-cart-btn'; // Rojo
+            addToCartBtn.textContent = 'Añadir al Carrito';
+            addToCartBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Evitar que el clic en el botón abra el modal
+                promptSizeSelection(product);
+            });
+
+            // Ensamblar la tarjeta
+            cardBody.appendChild(title);
+            cardBody.appendChild(price);
+            cardBody.appendChild(stock);
+            cardBody.appendChild(sizesList);
+            cardBody.appendChild(addToCartBtn);
+
+            card.appendChild(img);
+            card.appendChild(cardBody);
+            col.appendChild(card);
+
+            // Evento para abrir el modal al hacer clic en la tarjeta
+            card.addEventListener('click', () => {
+                showProductDetails(product);
+            });
+
+            return col;
+        };
+
+        // Función para cargar los productos desde Firestore
+        const loadProducts = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "productos"));
+                products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                filteredProducts = [...products];
+                renderProducts(filteredProducts);
+                loadBrands();
+                loadCategories(); // Cargar categorías únicas
+                document.getElementById('loadingSpinner').style.display = 'none';
+            } catch (error) {
+                console.error("Error al cargar los productos:", error);
+                showToast('error', 'Hubo un problema al cargar los productos. Inténtalo de nuevo más tarde.');
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        };
+
+        // Función para cargar las marcas únicas en el filtro
+        const loadBrands = () => {
+            const brandFilter = document.getElementById('brandFilter');
+            const brands = [...new Set(products.map(product => product.marca))].sort();
+
+            brands.forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                brandFilter.appendChild(option);
+            });
+
+            // Añadir event listeners para el filtrado
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            brandFilter.addEventListener('change', applyFilters);
+        };
+
+        // Función para cargar las categorías únicas en el filtro (opcional si deseas dinámico)
+        const loadCategories = () => {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categories = [...new Set(products.map(product => product.categoria))].sort();
+
+            categories.forEach(category => {
+                if(category !== "Zapatilla" && category !== "Chimpu"){
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                }
+            });
+
+            // Añadir event listener para el filtrado de categoría
+            categoryFilter.addEventListener('change', applyFilters);
+        };
+
+        // Función para aplicar los filtros de búsqueda, marca y categoría
+        const applyFilters = () => {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedBrand = document.getElementById('brandFilter').value;
+            const selectedCategory = document.getElementById('categoryFilter').value;
+
+            filteredProducts = products.filter(product => {
+                const matchesSearch = product.modelo.toLowerCase().includes(searchTerm) || product.marca.toLowerCase().includes(searchTerm);
+                const matchesBrand = selectedBrand === "" || product.marca === selectedBrand;
+                const matchesCategory = selectedCategory === "" || product.categoria === selectedCategory;
+                return matchesSearch && matchesBrand && matchesCategory;
+            });
+
+            renderProducts(filteredProducts);
+
+            // Desplazar al inicio de los productos después de aplicar el filtro
+            document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Función para renderizar los productos en pantalla
+        const renderProducts = (productsToRender) => {
+            const productsContainer = document.getElementById('productsContainer');
+            productsContainer.innerHTML = ''; // Limpiar productos existentes
+
+            if (productsToRender.length === 0) {
+                productsContainer.innerHTML = '<p class="text-center">No se encontraron productos que coincidan con los criterios de búsqueda.</p>';
+                return;
+            }
+
+            productsToRender.forEach(product => {
+                const productCard = createProductCard(product);
+                productsContainer.appendChild(productCard);
+            });
+        };
+
+        // Función para obtener el carrito desde localStorage
+        const getCart = () => {
+            const cart = localStorage.getItem('cart');
+            return cart ? JSON.parse(cart) : [];
+        };
+
+        // Función para guardar el carrito en localStorage
+        const saveCart = (cart) => {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        };
+
+        // Función para actualizar el contador del carrito
+        const updateCartCount = () => {
+            const cart = getCart();
+            const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        };
+
+        // Función para mostrar el prompt de selección de talla
+        const promptSizeSelection = (product) => {
+            const availableSizes = Object.keys(product.tallas).filter(size => product.tallas[size] > 0);
+            
+            if (availableSizes.length === 0) {
+                showToast('warning', 'No hay tallas disponibles para este producto.');
+                return;
+            }
+
+            Swal.fire({
+                title: `Selecciona una talla para ${product.marca} ${product.modelo}`,
+                input: 'select',
+                inputOptions: availableSizes.reduce((options, size) => {
+                    options[size] = `Talla ${size} - Disponibles: ${product.tallas[size]}`;
+                    return options;
+                }, {}),
+                inputPlaceholder: 'Selecciona una talla',
+                showCancelButton: true,
+                confirmButtonText: 'Añadir al Carrito',
+                cancelButtonText: 'Cancelar',
+                preConfirm: (selectedSize) => {
+                    if (!selectedSize) {
+                        Swal.showValidationMessage('Debes seleccionar una talla.');
+                    }
+                    return selectedSize;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const selectedSize = result.value;
+                    addToCart(product, selectedSize);
+                }
+            });
+        };
+
+        // Función para añadir un producto al carrito con la talla seleccionada
+        const addToCart = (product, size) => {
+            let cart = getCart();
+            const existingProduct = cart.find(item => item.id === product.id && item.size === size);
+
+            if (existingProduct) {
+                if (existingProduct.quantity < product.tallas[size]) {
+                    existingProduct.quantity += 1;
+                } else {
+                    showToast('warning', 'No hay suficiente stock disponible para esta talla.');
+                    return;
+                }
+            } else {
+                cart.push({
+                    id: product.id,
+                    marca: product.marca,
+                    modelo: product.modelo,
+                    precioVenta: product.precioVenta,
+                    imageUrl: product.imageUrl,
+                    size: size,
+                    quantity: 1
+                });
+            }
+
+            saveCart(cart);
+            updateCartCount();
+            showToast('success', `${product.marca} ${product.modelo} Talla ${size} ha sido añadido al carrito.`);
+        };
+
+        // Función para renderizar los ítems del carrito en el modal
+        const renderCart = () => {
+            const cart = getCart();
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const cartTotalElement = document.getElementById('cartTotal');
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center">Tu carrito está vacío.</p>';
+                cartTotalElement.textContent = '0.00';
+                return;
+            }
+
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.precioVenta * item.quantity;
+                total += itemTotal;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'd-flex align-items-center mb-3 cart-item';
+
+                const img = document.createElement('img');
+                img.src = item.imageUrl || 'https://via.placeholder.com/60x60?text=Sin+Imagen';
+                img.alt = `${item.marca} ${item.modelo}`;
+
+                const details = document.createElement('div');
+                details.className = 'ms-3 flex-grow-1';
+
+                const title = document.createElement('h6');
+                title.className = 'cart-item-title mb-1';
+                title.textContent = `${item.marca} ${item.modelo} - Talla ${item.size}`;
+
+                const price = document.createElement('p');
+                price.className = 'cart-item-price mb-1';
+                price.textContent = `S/ ${item.precioVenta.toFixed(2)} x ${item.quantity} = S/ ${itemTotal.toFixed(2)}`;
+
+                const quantityControl = document.createElement('div');
+                quantityControl.className = 'd-flex align-items-center';
+
+                const decreaseBtn = document.createElement('button');
+                decreaseBtn.className = 'btn btn-sm btn-outline-secondary me-2';
+                decreaseBtn.innerHTML = '<i class="bi bi-dash"></i>';
+                decreaseBtn.addEventListener('click', () => updateQuantity(item.id, item.size, item.quantity - 1));
+
+                const quantitySpan = document.createElement('span');
+                quantitySpan.textContent = item.quantity;
+
+                const increaseBtn = document.createElement('button');
+                increaseBtn.className = 'btn btn-sm btn-outline-secondary ms-2';
+                increaseBtn.innerHTML = '<i class="bi bi-plus"></i>';
+                increaseBtn.addEventListener('click', () => updateQuantity(item.id, item.size, item.quantity + 1));
+
+                quantityControl.appendChild(decreaseBtn);
+                quantityControl.appendChild(quantitySpan);
+                quantityControl.appendChild(increaseBtn);
+
+                details.appendChild(title);
+                details.appendChild(price);
+                details.appendChild(quantityControl);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn btn-sm btn-danger ms-3';
+                removeBtn.innerHTML = '<i class="bi bi-trash"></i>';
+                removeBtn.addEventListener('click', () => removeFromCart(item.id, item.size));
+
+                cartItem.appendChild(img);
+                cartItem.appendChild(details);
+                cartItem.appendChild(removeBtn);
+
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            cartTotalElement.textContent = total.toFixed(2);
+        };
+
+        // Función para actualizar la cantidad de un ítem en el carrito
+        const updateQuantity = (id, size, newQuantity) => {
+            let cart = getCart();
+            const productIndex = cart.findIndex(item => item.id === id && item.size === size);
+
+            if (productIndex > -1) {
+                if (newQuantity < 1) {
+                    removeFromCart(id, size);
+                    return;
+                }
+
+                const product = cart[productIndex];
+                // Aquí podrías verificar nuevamente el stock si es necesario
+
+                cart[productIndex].quantity = newQuantity;
+                saveCart(cart);
+                renderCart();
+                updateCartCount();
+            }
+        };
+
+        // Función para eliminar un ítem del carrito
+        const removeFromCart = (id, size) => {
+            let cart = getCart();
+            cart = cart.filter(item => !(item.id === id && item.size === size));
+            saveCart(cart);
+            renderCart();
+            updateCartCount();
+            showToast('success', 'El producto ha sido eliminado del carrito.');
+        };
+
+        // Función para proceder a comprar vía WhatsApp y registrar la venta
+        const proceedToCheckout = async () => {
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('info', 'Añade productos al carrito antes de proceder a comprar.');
+                return;
+            }
+
+            // Validar y registrar la venta en Firestore
+            try {
+                await runTransaction(db, async (transaction) => {
+                    for (const item of cart) {
+                        const productRef = doc(db, "productos", item.id);
+                        const productSnap = await transaction.get(productRef);
+
+                        if (!productSnap.exists()) {
+                            throw new Error(`El producto ${item.marca} ${item.modelo} ya no está disponible.`);
+                        }
+
+                        const productData = productSnap.data();
+                        const currentStock = productData.tallas[item.size] || 0;
+
+                        if (currentStock < item.quantity) {
+                            throw new Error(`No hay suficiente stock para ${item.marca} ${item.modelo} Talla ${item.size}.`);
+                        }
+
+                        // Actualizar el stock
+                        transaction.update(productRef, {
+                            [`tallas.${item.size}`]: currentStock - item.quantity,
+                            stockTotal: (productData.stockTotal || 0) - item.quantity
+                        });
+
+                        // Registrar la venta
+                        const ventasRef = collection(db, "ventas");
+                        await addDoc(ventasRef, {
+                            producto: `${item.marca} ${item.modelo}`,
+                            talla: item.size,
+                            cantidad: item.quantity,
+                            precio: item.precioVenta,
+                            fechaHora: new Date().toISOString()
+                        });
+                    }
+                });
+
+                // Construir el mensaje con los productos seleccionados
+                let message = "Hola, quisiera confirmar mi compra de los siguientes productos:\n\n";
+                let total = 0;
+                cart.forEach(item => {
+                    const itemTotal = item.precioVenta * item.quantity;
+                    total += itemTotal;
+                    message += `• ${item.marca} ${item.modelo} - Talla: ${item.size} - Cantidad: ${item.quantity} - Precio S/: ${itemTotal.toFixed(2)}\n`;
+                });
+                message += `\nTotal S/: ${total.toFixed(2)}`;
+
+                const encodedMessage = encodeURIComponent(message);
+
+                const whatsappNumber = "51915950262"; 
+
+                // Construir la URL de WhatsApp
+                const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+                // Redirigir al usuario a WhatsApp
+                window.open(whatsappURL, '_blank');
+
+                // Vaciar el carrito después de la compra
+                saveCart([]);
+                renderCart();
+                updateCartCount();
+                showToast('success', 'Tu compra ha sido registrada y enviada a WhatsApp.');
+                const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+                cartModal.hide();
+
+                // Actualizar la lista de productos para reflejar nuevos stocks
+                loadProducts();
+            } catch (error) {
+                console.error("Error al procesar la compra:", error);
+                Swal.fire('Error', error.message, 'error');
+            }
+        };
+
+        // Función para mostrar los detalles del producto en el modal
+        const showProductDetails = (product) => {
+            selectedProduct = product; // Guardar el producto seleccionado
+
+            // Rellenar los campos del modal
+            document.getElementById('modalProductTitle').textContent = `${product.marca} ${product.modelo}`;
+            document.getElementById('modalProductBrand').textContent = product.marca;
+            document.getElementById('modalProductModel').textContent = product.modelo;
+            document.getElementById('modalProductPrice').textContent = product.precioVenta.toFixed(2);
+            document.getElementById('modalProductStock').textContent = product.stockTotal;
+
+            // Rellenar las tallas disponibles
+            const sizesList = document.getElementById('modalProductSizes');
+            sizesList.innerHTML = ''; // Limpiar tallas anteriores
+            for (const [size, qty] of Object.entries(product.tallas)) {
+                if (qty > 0) {
+                    const li = document.createElement('li');
+                    li.textContent = `Talla ${size}: ${qty}`;
+                    sizesList.appendChild(li);
+                }
+            }
+
+            // Configurar el carrusel de imágenes
+            const carouselIndicators = document.getElementById('productCarouselIndicators');
+            const carouselInner = document.getElementById('productCarouselInner');
+            carouselIndicators.innerHTML = '';
+            carouselInner.innerHTML = '';
+
+            // Obtener las imágenes adicionales
+            const additionalImages = product.additionalImages || []; // Asegúrate de tener este campo en tus productos
+
+            // Añadir la imagen principal como la primera imagen del carrusel
+            const allImages = [product.imageUrl, ...additionalImages].filter(img => img); // Filtrar imágenes no definidas
+
+            allImages.forEach((imgUrl, index) => {
+                // Crear indicadores
+                const indicator = document.createElement('button');
+                indicator.type = 'button';
+                indicator.setAttribute('data-bs-target', '#productCarousel');
+                indicator.setAttribute('data-bs-slide-to', index);
+                indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+                if (index === 0) {
+                    indicator.classList.add('active');
+                    indicator.setAttribute('aria-current', 'true');
+                }
+                carouselIndicators.appendChild(indicator);
+
+                // Crear elementos del carrusel
+                const carouselItem = document.createElement('div');
+                carouselItem.className = 'carousel-item';
+                if (index === 0) {
+                    carouselItem.classList.add('active');
+                }
+
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.className = 'd-block w-100';
+                img.alt = `Imagen ${index + 1} de ${product.marca} ${product.modelo}`;
+
+                carouselItem.appendChild(img);
+                carouselInner.appendChild(carouselItem);
+            });
+
+            // Mostrar el modal
+            const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+            productModal.show();
+        };
+
+        // Función para añadir al carrito desde el modal
+        const addToCartFromModal = () => {
+            if (!selectedProduct) return;
+
+            // Mostrar el prompt de selección de talla
+            promptSizeSelection(selectedProduct);
+        };
+
+        // Ejecutar la carga de productos cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            updateCartCount();
+
+            // Renderizar el carrito cuando se abra el modal
+            const cartModalElement = document.getElementById('cartModal');
+            cartModalElement.addEventListener('shown.bs.modal', renderCart);
+
+            // Manejar el botón de comprar
+            document.getElementById('checkoutBtn').addEventListener('click', proceedToCheckout);
+
+            // Manejar el botón de añadir al carrito desde el modal
+            document.getElementById('modalAddToCartBtn').addEventListener('click', addToCartFromModal);
+        });
+    </script>
+
+</body>
+</html>
+

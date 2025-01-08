@@ -1,147 +1,268 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ventas</title>
+    <title>Ventas - Zapatillas</title>
+    <script>
+        // Función para verificar si fue redirigido desde ciertos archivos
+        document.addEventListener("DOMContentLoaded", () => {
+          const referrer = document.referrer;
+    
+          // Si viene de los archivos permitidos
+          if (
+            referrer.includes("autorizado.html") ||
+            referrer.includes("agregar-producto.html") ||
+            referrer.includes("index.html") ||
+            referrer.includes("ventas.html") ||
+            referrer.includes("reportes.html")
+          ) {
+            // No hacer nada
+            return;
+        } else {
+            // Redirige rápidamente a tienda.html
+            window.location.href = "tienda/index.html";
+          }
+        });
+    </script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Choices.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
     <style>
+        /* Estilos generales */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
         }
         /* Barra lateral */
         .sidebar {
-            background-color: #2c3e50;
-            color: white;
             height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            padding: 20px;
             width: 220px;
-            transition: all 0.3s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+            color: #fff;
+        }
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
         }
         .sidebar a {
-            color: white;
-            text-decoration: none;
+            padding: 15px 20px;
             display: block;
-            margin-bottom: 10px;
-            transition: 0.3s;
+            color: #adb5bd;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
         }
-        .sidebar a:hover {
-            color: #3498db;
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #495057;
+            color: #fff;
         }
         /* Contenido principal */
         .content {
             margin-left: 220px;
             padding: 20px;
-            transition: all 0.3s;
         }
-        /* Media Queries para Responsividad */
+        /* Formulario de venta */
+        .form-container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .form-title {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+        .form-title i {
+            margin-right: 10px;
+        }
+        /* Tabla de ventas */
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .card-title i {
+            margin-right: 10px;
+        }
+        /* Contenedor de la imagen del producto */
+        .product-image-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .product-image {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            object-fit: cover;
+            display: none; /* Inicialmente oculta */
+        }
+        /* Custom styles for Choices.js to include images */
+        .choices__item--selectable img {
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+        .choices__list--dropdown .choices__item--selectable {
+            display: flex;
+            align-items: center;
+        }
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .sidebar {
-                display: none;
+                width: 100%;
+                height: auto;
+                position: relative;
             }
             .content {
                 margin-left: 0;
-                padding: 10px;
             }
-            /* Mostrar Navbar en dispositivos móviles */
-            .navbar-mobile {
-                display: flex;
+            .product-image {
+                max-width: 150px;
+                max-height: 150px;
             }
-        }
-        @media (min-width: 769px) {
-            .navbar-mobile {
-                display: none;
-            }
-        }
-        .table th, .table td {
-            vertical-align: middle;
         }
     </style>
 </head>
 <body>
 
+    <!-- Barra Lateral para Dispositivos Grandes -->
+    <div class="sidebar d-none d-md-block">
+        <h3><i class="bi bi-shop-window me-2"></i>Zapatillas</h3>
+        <a href="index.html"><i class="bi bi-box-seam me-2"></i>Inventario</a>
+        <a href="agregar-producto.html"><i class="bi bi-plus-circle me-2"></i>Agregar Producto</a>
+        <a href="ventas.html" class="active"><i class="bi bi-cash-coin me-2"></i>Ventas</a>
+        <a href="reportes.html"><i class="bi bi-bar-chart-fill me-2"></i>Reportes</a>
+        <a href="/tienda"><i class="bi bi-shop me-2"></i>Tienda</a>
+    </div>
+
     <!-- Barra de Navegación para Dispositivos Móviles -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-md-none navbar-mobile">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Zapatillas</a>
+            <a class="navbar-brand" href="#"><i class="bi bi-shop-window me-2"></i>Zapatillas</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavMobile" 
                     aria-controls="navbarNavMobile" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavMobile">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Inventario</a>
+                        <a class="nav-link" href="index.html"><i class="bi bi-box-seam me-1"></i>Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="agregar-producto.html">Agregar Producto</a>
+                        <a class="nav-link" href="agregar-producto.html"><i class="bi bi-plus-circle me-1"></i>Agregar Producto</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ventas.html">Ventas</a>
+                        <a class="nav-link active" href="ventas.html"><i class="bi bi-cash-coin me-1"></i>Ventas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="reportes.html">Reportes</a>
+                        <a class="nav-link" href="reportes.html"><i class="bi bi-bar-chart-fill me-1"></i>Reportes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tienda"><i class="bi bi-shop me-1"></i>Tienda</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Barra Lateral para Dispositivos Grandes -->
-    <div class="sidebar d-none d-md-block">
-        <h3 class="text-center mb-4">Zapatillas</h3>
-        <a href="index.html">Inventario</a>
-        <a href="agregar-producto.html">Agregar Producto</a>
-        <a href="ventas.html">Ventas</a>
-        <a href="reportes.html">Reportes</a>
-    </div>
-
     <!-- Contenido Principal -->
     <div class="content">
         <div class="container-fluid">
-            <h2>Ventas</h2>
-            <p>Aquí puedes registrar las ventas realizadas.</p>
-            
             <!-- Formulario para registrar una venta -->
-            <form id="salesForm">
-                <div class="mb-3">
-                    <label for="productSelect" class="form-label">Producto</label>
-                    <select id="productSelect" class="form-select" required>
-                        <option value="" disabled selected>Selecciona un producto</option>
-                        <!-- Los productos se cargarán dinámicamente aquí -->
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="quantity" class="form-label">Cantidad Vendida</label>
-                    <input type="number" id="quantity" class="form-control" required min="1" placeholder="Número de unidades">
-                </div>
-                <div class="mb-3">
-                    <label for="datetime" class="form-label">Fecha y Hora de Venta</label>
-                    <input type="datetime-local" id="datetime" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Registrar Venta</button>
-            </form>
+            <div class="form-container">
+                <h2 class="form-title"><i class="bi bi-cash-coin me-2"></i>Registrar Venta</h2>
+                <form id="salesForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="productSelect" class="form-label"><i class="bi bi-box-seam me-1"></i>Producto <span class="text-danger">*</span></label>
+                                <select id="productSelect" class="form-select" required>
+                                    <option value="" disabled selected>Selecciona un producto</option>
+                                    <!-- Los productos se cargarán dinámicamente aquí -->
+                                </select>
+                                <div id="stockDisplay" class="mt-2 text-muted"></div>
+                            </div>
+                        </div>
+                        <!-- Contenedor para la imagen del producto -->
+                        <div class="col-md-4">
+                            <div class="product-image-container">
+                                <img id="productImage" src="" alt="Imagen del Producto" class="product-image">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Campo de Precio de Venta -->
+                    <div class="mb-3">
+                        <label for="price" class="form-label"><i class="bi bi-cash me-1"></i>Precio de Venta (S/) <span class="text-danger">*</span></label>
+                        <input type="number" id="price" class="form-control" required min="0" step="0.01" placeholder="Precio de venta" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sizeSelect" class="form-label"><i class="bi bi-rulers me-1"></i>Talla <span class="text-danger">*</span></label>
+                        <select id="sizeSelect" class="form-select" required disabled>
+                            <option value="" disabled selected>Selecciona una talla</option>
+                            <!-- Las tallas se cargarán dinámicamente aquí -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label"><i class="bi bi-cart-plus me-1"></i>Cantidad Vendida <span class="text-danger">*</span></label>
+                        <input type="number" id="quantity" class="form-control" required min="1" placeholder="Número de unidades" disabled>
+                        <small id="maxQuantity" class="form-text text-muted"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="datetime" class="form-label"><i class="bi bi-calendar-event me-1"></i>Fecha y Hora de Venta <span class="text-danger">*</span></label>
+                        <input type="datetime-local" id="datetime" class="form-control" required disabled>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" disabled><i class="bi bi-save me-2"></i>Registrar Venta</button>
+                </form>
+            </div>
 
-            <h3 class="mt-5">Ventas Realizadas</h3>
-            <table id="salesTable" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Fecha y Hora</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las ventas se cargarán aquí dinámicamente -->
-                </tbody>
-            </table>
+            <!-- Tabla de Ventas Realizadas -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="bi bi-table me-2"></i>Ventas Realizadas</h3>
+                    <div class="table-responsive">
+                        <table id="salesTable" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Producto</th>
+                                    <th>Talla</th>
+                                    <th>Precio (S/)</th>
+                                    <th>Cantidad</th>
+                                    <th>Fecha y Hora</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Las ventas se cargarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -150,22 +271,26 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editSaleModalLabel">Editar Venta</h5>
+                    <h5 class="modal-title" id="editSaleModalLabel"><i class="bi bi-pencil-fill me-2"></i>Editar Venta</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="editQuantity" class="form-label">Nueva Cantidad Vendida</label>
-                        <input type="number" id="editQuantity" class="form-control" min="1" placeholder="Número de unidades">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editDatetime" class="form-label">Nueva Fecha y Hora de Venta</label>
-                        <input type="datetime-local" id="editDatetime" class="form-control" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="saveEdit">Guardar Cambios</button>
+                    <form id="editSaleForm">
+                        <div class="mb-3">
+                            <label for="editPrice" class="form-label"><i class="bi bi-cash me-1"></i>Precio de Venta (S/) <span class="text-danger">*</span></label>
+                            <input type="number" id="editPrice" class="form-control" required min="0" step="0.01" placeholder="Precio de venta">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editQuantity" class="form-label"><i class="bi bi-cart-check me-1"></i>Nueva Cantidad Vendida <span class="text-danger">*</span></label>
+                            <input type="number" id="editQuantity" class="form-control" min="1" required placeholder="Número de unidades">
+                            <small id="editMaxQuantity" class="form-text text-muted"></small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDatetime" class="form-label"><i class="bi bi-calendar-plus me-1"></i>Nueva Fecha y Hora de Venta <span class="text-danger">*</span></label>
+                            <input type="datetime-local" id="editDatetime" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save me-2"></i>Guardar Cambios</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -175,16 +300,16 @@
     <div class="modal fade" id="deleteSaleModal" tabindex="-1" aria-labelledby="deleteSaleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteSaleModalLabel">Eliminar Venta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteSaleModalLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i>Eliminar Venta</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar esta venta?</p>
+                    <p>¿Estás seguro de que deseas eliminar esta venta? Esta acción no se puede revertir.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">Eliminar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete"><i class="bi bi-trash-fill me-2"></i>Eliminar</button>
                 </div>
             </div>
         </div>
@@ -194,12 +319,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <!-- Bootstrap Bundle JS (Incluye Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Firebase JS SDK (Modular) -->
+    <!-- Choices.js JS -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <!-- Firebase JS SDK (Versión 9 Modular) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        // Importar las funciones necesarias desde la SDK de Firebase versión 9
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, getDoc, runTransaction, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // Tu configuración de Firebase
+        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyASIRckSRbp2DFJZIIgMMAXg4BsBnntWnc",
             authDomain: "administrarinventario.firebaseapp.com",
@@ -216,11 +344,37 @@
 
         let products = [];
         let currentSaleId = null;
-        let currentSaleQuantity = 0;
+        let currentSaleQuantity = null;
+        let choicesProductInstance = null; // Instancia de Choices.js para productos
+        let choicesSizeInstance = null; // Instancia de Choices.js para tallas
 
-        // Cargar productos para el formulario de venta
+        /**
+         * Cargar productos desde Firestore y poblar el select de productos con imágenes
+         */
         async function loadProducts() {
             const productSelect = document.getElementById('productSelect');
+            const sizeSelect = document.getElementById('sizeSelect');
+            const quantityInput = document.getElementById('quantity');
+            const datetimeInput = document.getElementById('datetime');
+            const submitButton = document.querySelector('button[type="submit"]');
+            const stockDisplay = document.getElementById('stockDisplay');
+            const productImage = document.getElementById('productImage'); // Imagen del producto
+            const priceInput = document.getElementById('price'); // Campo de precio
+
+            // Reiniciar los campos relacionados con tallas y stock
+            sizeSelect.innerHTML = '<option value="" disabled selected>Selecciona una talla</option>';
+            sizeSelect.disabled = true;
+            quantityInput.value = '';
+            quantityInput.disabled = true;
+            datetimeInput.value = '';
+            datetimeInput.disabled = true;
+            submitButton.disabled = true;
+            stockDisplay.textContent = '';
+            productImage.src = ''; // Limpiar la imagen
+            productImage.style.display = 'none'; // Ocultar la imagen
+            priceInput.value = '';
+            priceInput.disabled = true;
+
             productSelect.innerHTML = '<option value="" disabled selected>Selecciona un producto</option>';
             products = []; // Resetear la lista de productos
 
@@ -228,35 +382,237 @@
                 const querySnapshot = await getDocs(collection(db, "productos"));
                 querySnapshot.forEach((docSnap) => {
                     const product = docSnap.data();
-                    const option = document.createElement("option");
-                    option.value = docSnap.id;
-                    option.textContent = `${product.marca} - ${product.modelo} (Stock: ${product.stock})`;
-                    productSelect.appendChild(option);
                     products.push({ id: docSnap.id, ...product });
                 });
+
+                // Limpiar opciones previas
+                productSelect.innerHTML = '<option value="" disabled selected>Selecciona un producto</option>';
+
+                // Agregar opciones con imágenes
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.id;
+                    option.innerHTML = `
+                        <img src="${product.imageUrl || 'https://via.placeholder.com/30'}" alt="${escapeHTML(product.marca)} - ${escapeHTML(product.modelo)}">
+                        ${escapeHTML(product.marca)} - ${escapeHTML(product.modelo)}
+                    `;
+                    productSelect.appendChild(option);
+                });
+
+                // Inicializar o actualizar Choices.js para productos con plantillas personalizadas
+                if (!choicesProductInstance) {
+                    choicesProductInstance = new Choices(productSelect, {
+                        searchEnabled: true,
+                        itemSelectText: '',
+                        placeholder: true,
+                        placeholderValue: 'Selecciona un producto',
+                        shouldSort: false,
+                        callbackOnCreateTemplates: function(template) {
+                            return {
+                                item: function(classNames, data) {
+                                    return template(`
+                                        <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : ''} data-id="${data.id}" data-value="${data.value}">
+                                            ${data.value ? `<img src="${data.customProperties.imageUrl || 'https://via.placeholder.com/30'}" alt="${escapeHTML(data.label)}" style="width:30px; height:30px; object-fit:cover; margin-right:10px; border-radius:4px;">` : ''}
+                                            <span>${escapeHTML(data.label)}</span>
+                                        </div>
+                                    `);
+                                },
+                                choice: function(classNames, data) {
+                                    return template(`
+                                        <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : ''} data-id="${data.id}" data-value="${data.value}">
+                                            ${data.value ? `<img src="${data.customProperties.imageUrl || 'https://via.placeholder.com/30'}" alt="${escapeHTML(data.label)}" style="width:30px; height:30px; object-fit:cover; margin-right:10px; border-radius:4px;">` : ''}
+                                            <span>${escapeHTML(data.label)}</span>
+                                        </div>
+                                    `);
+                                }
+                            };
+                        }
+                    });
+
+                    // Asignar datos personalizados para imágenes
+                    choicesProductInstance.setChoices(
+                        products.map(product => ({
+                            value: product.id,
+                            label: `${product.marca} - ${product.modelo}`,
+                            customProperties: {
+                                imageUrl: product.imageUrl || 'https://via.placeholder.com/30'
+                            }
+                        })),
+                        'value',
+                        'label',
+                        true
+                    );
+                } else {
+                    // Actualizar Choices.js con nuevas opciones
+                    choicesProductInstance.setChoices(
+                        products.map(product => ({
+                            value: product.id,
+                            label: `${product.marca} - ${product.modelo}`,
+                            customProperties: {
+                                imageUrl: product.imageUrl || 'https://via.placeholder.com/30'
+                            }
+                        })),
+                        'value',
+                        'label',
+                        true
+                    );
+                }
+
             } catch (error) {
                 Swal.fire('Error', 'Hubo un problema al cargar los productos.', 'error');
                 console.error("Error al cargar productos:", error);
             }
         }
 
-        // Cargar las ventas realizadas
+        /**
+         * Cargar tallas según el producto seleccionado
+         * @param {string} productId - ID del producto seleccionado
+         */
+        async function loadSizes(productId) {
+            const sizeSelect = document.getElementById('sizeSelect');
+            const quantityInput = document.getElementById('quantity');
+            const datetimeInput = document.getElementById('datetime');
+            const submitButton = document.querySelector('button[type="submit"]');
+            const stockDisplay = document.getElementById('stockDisplay');
+            const productImage = document.getElementById('productImage'); // Imagen del producto
+            const priceInput = document.getElementById('price'); // Campo de precio
+
+            sizeSelect.innerHTML = '<option value="" disabled selected>Selecciona una talla</option>';
+            sizeSelect.disabled = true;
+            quantityInput.value = '';
+            quantityInput.disabled = true;
+            datetimeInput.value = '';
+            datetimeInput.disabled = true;
+            submitButton.disabled = true;
+            stockDisplay.textContent = '';
+            productImage.src = ''; // Limpiar la imagen
+            productImage.style.display = 'none'; // Ocultar la imagen
+            priceInput.value = '';
+            priceInput.disabled = true;
+
+            if (!productId) return;
+
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.tallas || Object.keys(product.tallas).length === 0) {
+                Swal.fire('Error', 'No hay tallas disponibles para este producto.', 'error');
+                return;
+            }
+
+            // Cargar las tallas en el select
+            Object.keys(product.tallas).forEach(talla => {
+                const option = document.createElement("option");
+                option.value = talla;
+                option.textContent = talla;
+                sizeSelect.appendChild(option);
+            });
+
+            sizeSelect.disabled = false;
+
+            // Inicializar o actualizar Choices.js para tallas
+            if (!choicesSizeInstance) {
+                choicesSizeInstance = new Choices(sizeSelect, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    placeholder: true,
+                    placeholderValue: 'Selecciona una talla',
+                    shouldSort: false,
+                });
+            } else {
+                choicesSizeInstance.setChoices(
+                    Array.from(sizeSelect.options).map(option => ({
+                        value: option.value,
+                        label: option.text,
+                        selected: option.selected
+                    })),
+                    'value',
+                    'label',
+                    false
+                );
+            }
+
+            // Mostrar la imagen del producto
+            if (product.imageUrl) {
+                productImage.src = product.imageUrl;
+                productImage.alt = `${product.marca} - ${product.modelo}`;
+                productImage.style.display = 'block';
+            } else {
+                productImage.src = '';
+                productImage.alt = 'Sin imagen disponible';
+                productImage.style.display = 'none';
+            }
+
+            // Mostrar y establecer el precio
+            if (product.precioVenta !== undefined) {
+                priceInput.value = product.precioVenta.toFixed(2);
+                priceInput.disabled = false;
+            }
+        }
+
+        /**
+         * Actualizar el estado de los campos según la selección de talla
+         */
+        function updateFormState() {
+            const sizeSelect = document.getElementById('sizeSelect');
+            const quantityInput = document.getElementById('quantity');
+            const datetimeInput = document.getElementById('datetime');
+            const submitButton = document.querySelector('button[type="submit"]');
+            const stockDisplay = document.getElementById('stockDisplay');
+            const productSelect = document.getElementById('productSelect');
+            const priceInput = document.getElementById('price');
+
+            const productId = productSelect.value;
+            const size = sizeSelect.value;
+
+            if (size) {
+                const product = products.find(p => p.id === productId);
+                const stock = product.tallas[size];
+                stockDisplay.textContent = `Stock disponible para talla ${size}: ${stock}`;
+                quantityInput.max = stock;
+                document.getElementById('maxQuantity').textContent = `Máximo disponible: ${stock}`;
+                quantityInput.disabled = false;
+                datetimeInput.disabled = false;
+                submitButton.disabled = false;
+            } else {
+                stockDisplay.textContent = '';
+                document.getElementById('maxQuantity').textContent = '';
+                quantityInput.disabled = true;
+                datetimeInput.disabled = true;
+                submitButton.disabled = true;
+            }
+        }
+
+        /**
+         * Cargar las ventas realizadas desde Firestore y mostrarlas en la tabla
+         */
         async function loadSales() {
             const salesTable = document.getElementById('salesTable').getElementsByTagName('tbody')[0];
             salesTable.innerHTML = '';
 
             try {
-                const querySnapshot = await getDocs(collection(db, "ventas"));
+                // Crear una consulta ordenada por 'fechaHora' descendente
+                const ventasRef = collection(db, "ventas");
+                const ventasQuery = query(ventasRef, orderBy("fechaHora", "desc"));
+                const querySnapshot = await getDocs(ventasQuery);
+
                 querySnapshot.forEach((docSnap) => {
                     const sale = docSnap.data();
                     const row = salesTable.insertRow();
+
+                    // Obtener la imagen del producto desde el arreglo 'products'
+                    const product = products.find(p => p.id === sale.productId);
+                    const imageUrl = product && product.imageUrl ? product.imageUrl : 'https://via.placeholder.com/50';
+                    const price = sale.precioVenta !== undefined ? sale.precioVenta.toFixed(2) : '0.00';
+
                     row.innerHTML = `
-                        <td>${sale.producto}</td>
+                        <td><img src="${imageUrl}" alt="${escapeHTML(sale.producto)}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"></td>
+                        <td>${escapeHTML(sale.producto)}</td>
+                        <td>${escapeHTML(sale.talla)}</td>
+                        <td>${price}</td>
                         <td>${sale.cantidad}</td>
                         <td>${formatDateTime(sale.fechaHora)}</td>
                         <td>
-                            <button class="btn btn-warning btn-sm editBtn" data-id="${docSnap.id}" data-cantidad="${sale.cantidad}" data-fechaHora="${sale.fechaHora}">Editar</button>
-                            <button class="btn btn-danger btn-sm deleteBtn" data-id="${docSnap.id}" data-cantidad="${sale.cantidad}">Eliminar</button>
+                            <button class="btn btn-warning btn-sm editBtn" data-id="${docSnap.id}" data-cantidad="${sale.cantidad}" data-talla="${sale.talla}" data-fechaHora="${sale.fechaHora}" data-precioVenta="${sale.precioVenta}"><i class="bi bi-pencil-fill me-1"></i>Editar</button>
+                            <button class="btn btn-danger btn-sm deleteBtn" data-id="${docSnap.id}" data-cantidad="${sale.cantidad}"><i class="bi bi-trash-fill me-1"></i>Eliminar</button>
                         </td>
                     `;
                 });
@@ -264,30 +620,37 @@
                 // Asignar eventos a los botones de Editar y Eliminar
                 document.querySelectorAll('.editBtn').forEach(button => {
                     button.addEventListener('click', (e) => {
-                        const saleId = e.target.dataset.id;
-                        const cantidad = parseInt(e.target.dataset.cantidad);
-                        const fechaHora = e.target.dataset.fechaHora;
+                        const saleId = e.target.closest('button').dataset.id;
+                        const cantidad = parseInt(e.target.closest('button').dataset.cantidad);
+                        const talla = e.target.closest('button').dataset.talla;
+                        const fechaHora = e.target.closest('button').dataset.fechaHora;
+                        const precioVenta = parseFloat(e.target.closest('button').dataset.precioVenta).toFixed(2);
 
                         currentSaleId = saleId;
-                        currentSaleQuantity = cantidad;
                         document.getElementById('editQuantity').value = cantidad;
                         document.getElementById('editDatetime').value = convertToInputDateTime(fechaHora);
+                        document.getElementById('editPrice').value = precioVenta;
+
+                        // Obtener el producto para establecer el máximo de cantidad
+                        const product = products.find(p => p.id === saleId); // Asumiendo que sale.productId = product.id
+                        // Nota: En el código original no se tiene acceso directo al stock en este punto
+                        // Podrías necesitar ajustar esto según la estructura de tus datos
 
                         // Mostrar el modal de edición
-                        new bootstrap.Modal(document.getElementById('editSaleModal')).show();
+                        editSaleModal.show();
                     });
                 });
 
                 document.querySelectorAll('.deleteBtn').forEach(button => {
                     button.addEventListener('click', (e) => {
-                        const saleId = e.target.dataset.id;
-                        const cantidad = parseInt(e.target.dataset.cantidad);
+                        const saleId = e.target.closest('button').dataset.id;
+                        const cantidad = parseInt(e.target.closest('button').dataset.cantidad);
 
                         currentSaleId = saleId;
                         currentSaleQuantity = cantidad;
 
                         // Mostrar el modal de confirmación de eliminación
-                        new bootstrap.Modal(document.getElementById('deleteSaleModal')).show();
+                        deleteSaleModal.show();
                     });
                 });
             } catch (error) {
@@ -296,30 +659,68 @@
             }
         }
 
-        // Formatear la fecha y hora para mostrar en la tabla
+        /**
+         * Formatear la fecha y hora para mostrar en la tabla
+         * @param {string} fechaHora - Fecha y hora en formato ISO
+         * @returns {string} Fecha y hora formateada
+         */
         function formatDateTime(fechaHora) {
             const date = new Date(fechaHora);
             return date.toLocaleString();
         }
 
-        // Convertir la fecha y hora almacenada a formato datetime-local para el input
+        /**
+         * Convertir la fecha y hora almacenada a formato datetime-local para el input
+         * @param {string} fechaHora - Fecha y hora en formato ISO
+         * @returns {string} Fecha y hora en formato datetime-local
+         */
         function convertToInputDateTime(fechaHora) {
             const date = new Date(fechaHora);
-            const tzOffset = date.getTimezoneOffset() * 60000; //offset in milliseconds
+            const tzOffset = date.getTimezoneOffset() * 60000; // Offset en milisegundos
             const localISOTime = (new Date(date - tzOffset)).toISOString().slice(0,16);
             return localISOTime;
         }
 
-        // Registrar una venta
+        /**
+         * Escapar HTML para prevenir XSS
+         * @param {string} str - Cadena a escapar
+         * @returns {string} Cadena escapada
+         */
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        // Instanciar los modales una sola vez
+        const editSaleModal = new bootstrap.Modal(document.getElementById('editSaleModal'));
+        const deleteSaleModal = new bootstrap.Modal(document.getElementById('deleteSaleModal'));
+
+        /**
+         * Registrar una venta en Firestore y actualizar el stock utilizando una transacción
+         */
         document.getElementById('salesForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const productId = document.getElementById('productSelect').value;
+            const size = document.getElementById('sizeSelect').value;
             const quantity = parseInt(document.getElementById('quantity').value);
             const datetime = document.getElementById('datetime').value;
+            const precioVenta = parseFloat(document.getElementById('price').value).toFixed(2);
+
+            // Validaciones básicas
+            if (!size) {
+                Swal.fire('Error', 'Por favor, selecciona una talla.', 'error');
+                return;
+            }
 
             if (!datetime) {
                 Swal.fire('Error', 'Por favor, selecciona la fecha y hora de la venta.', 'error');
+                return;
+            }
+
+            if (isNaN(precioVenta) || precioVenta < 0) {
+                Swal.fire('Error', 'Por favor, ingresa un precio de venta válido.', 'error');
                 return;
             }
 
@@ -329,42 +730,94 @@
                 return;
             }
 
-            if (quantity > product.stock) {
-                Swal.fire('Error', 'Cantidad vendida excede el stock disponible.', 'error');
+            // Verificar si hay suficiente stock para la talla seleccionada
+            if (!product.tallas || product.tallas[size] === undefined) {
+                Swal.fire('Error', 'No se encontró información de stock para la talla seleccionada.', 'error');
                 return;
             }
 
+            if (quantity > product.tallas[size]) {
+                Swal.fire('Error', 'Cantidad vendida excede el stock disponible para esta talla.', 'error');
+                return;
+            }
+
+            const saleData = {
+                productId: productId,
+                producto: `${product.marca} - ${product.modelo}`,
+                talla: size,
+                precioVenta: parseFloat(precioVenta), // Precio de venta
+                cantidad: quantity,
+                fechaHora: new Date(datetime).toISOString()
+            };
+
             try {
-                // Registrar la venta
-                await addDoc(collection(db, "ventas"), {
-                    productId: productId,
-                    producto: `${product.marca} - ${product.modelo}`,
-                    cantidad: quantity,
-                    fechaHora: new Date(datetime).toISOString()
+                await runTransaction(db, async (transaction) => {
+                    const productRef = doc(db, "productos", productId);
+                    const productSnap = await transaction.get(productRef);
+                    if (!productSnap.exists()) {
+                        throw new Error("El producto no existe.");
+                    }
+
+                    const currentStock = productSnap.data().tallas[size];
+                    if (currentStock < quantity) {
+                        throw new Error("Stock insuficiente para la talla seleccionada.");
+                    }
+
+                    // Actualizar stock
+                    transaction.update(productRef, {
+                        [`tallas.${size}`]: currentStock - quantity,
+                        stockTotal: (productSnap.data().stockTotal || 0) - quantity
+                    });
+
+                    // Agregar venta
+                    const ventasRef = collection(db, "ventas");
+                    transaction.set(doc(ventasRef), saleData);
                 });
 
-                // Actualizar stock
-                const productRef = doc(db, "productos", productId);
-                await updateDoc(productRef, {
-                    stock: product.stock - quantity
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Venta registrada',
+                    text: 'La venta se ha registrado exitosamente.',
+                    timer: 2000,
+                    showConfirmButton: false
                 });
 
-                Swal.fire('Venta registrada', 'La venta se ha registrado exitosamente.', 'success');
                 // Limpiar el formulario después de guardar
                 document.getElementById('salesForm').reset();
-                // Recargar productos y ventas
-                loadProducts();
-                loadSales();
+                if (choicesProductInstance) choicesProductInstance.clearStore();
+                if (choicesSizeInstance) {
+                    choicesSizeInstance.clearStore();
+                    choicesSizeInstance.setChoices([
+                        { value: '', label: 'Selecciona una talla', selected: true, disabled: true }
+                    ], 'value', 'label', true);
+                }
+                document.getElementById('sizeSelect').disabled = true;
+                document.getElementById('quantity').disabled = true;
+                document.getElementById('datetime').disabled = true;
+                document.getElementById('price').disabled = true;
+                document.querySelector('button[type="submit"]').disabled = true;
+                document.getElementById('stockDisplay').textContent = '';
+                document.getElementById('maxQuantity').textContent = '';
+                document.getElementById('productImage').src = ''; // Limpiar la imagen
+                document.getElementById('productImage').style.display = 'none'; // Ocultar la imagen
+
+                // Recargar productos y ventas para reflejar los cambios en el stock
+                await loadProducts();
+                await loadSales();
             } catch (error) {
-                Swal.fire('Error', 'Hubo un error al registrar la venta.', 'error');
+                Swal.fire('Error', `Hubo un error al registrar la venta: ${error.message}`, 'error');
                 console.error("Error al registrar venta:", error);
             }
         });
 
-        // Guardar cambios de edición
-        document.getElementById('saveEdit').addEventListener('click', async () => {
+        /**
+         * Guardar cambios de edición de una venta utilizando una transacción
+         */
+        document.getElementById('editSaleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const newQuantity = parseInt(document.getElementById('editQuantity').value);
             const newDatetime = document.getElementById('editDatetime').value;
+            const newPrecioVenta = parseFloat(document.getElementById('editPrice').value).toFixed(2);
 
             if (isNaN(newQuantity) || newQuantity < 1) {
                 Swal.fire('Error', 'La cantidad debe ser un número mayor o igual a 1.', 'error');
@@ -376,115 +829,164 @@
                 return;
             }
 
+            if (isNaN(newPrecioVenta) || newPrecioVenta < 0) {
+                Swal.fire('Error', 'Por favor, ingresa un precio de venta válido.', 'error');
+                return;
+            }
+
             try {
-                const saleRef = doc(db, "ventas", currentSaleId);
-                const saleSnap = await getDoc(saleRef);
-                if (!saleSnap.exists()) {
-                    Swal.fire('Error', 'La venta no existe.', 'error');
-                    return;
-                }
+                await runTransaction(db, async (transaction) => {
+                    const saleRef = doc(db, "ventas", currentSaleId);
+                    const saleSnap = await transaction.get(saleRef);
+                    if (!saleSnap.exists()) {
+                        throw new Error("La venta no existe.");
+                    }
 
-                const saleData = saleSnap.data();
-                const oldQuantity = saleData.cantidad;
-                const quantityDifference = newQuantity - oldQuantity;
+                    const saleData = saleSnap.data();
+                    const oldQuantity = saleData.cantidad;
+                    const oldPrecioVenta = saleData.precioVenta;
+                    const quantityDifference = newQuantity - oldQuantity;
 
-                // Verificar si hay suficiente stock para aumentar la venta
-                if (quantityDifference > 0) {
                     const productRef = doc(db, "productos", saleData.productId);
-                    const productSnap = await getDoc(productRef);
-                    if (productSnap.exists()) {
-                        const productData = productSnap.data();
-                        if (quantityDifference > productData.stock) {
-                            Swal.fire('Error', 'Cantidad vendida excede el stock disponible.', 'error');
-                            return;
+                    const productSnap = await transaction.get(productRef);
+                    if (!productSnap.exists()) {
+                        throw new Error("El producto asociado a esta venta no existe.");
+                    }
+
+                    const productData = productSnap.data();
+                    const currentStock = productData.tallas[saleData.talla];
+
+                    // Actualizar stock
+                    if (quantityDifference > 0) {
+                        if (quantityDifference > currentStock) {
+                            throw new Error("Cantidad vendida excede el stock disponible.");
                         }
-                        // Actualizar el stock
-                        await updateDoc(productRef, {
-                            stock: productData.stock - quantityDifference
+                        // Reducir stock
+                        transaction.update(productRef, {
+                            [`tallas.${saleData.talla}`]: currentStock - quantityDifference,
+                            stockTotal: (productData.stockTotal || 0) - quantityDifference
                         });
-                    } else {
-                        Swal.fire('Error', 'El producto asociado a esta venta no existe.', 'error');
-                        return;
-                    }
-                } else if (quantityDifference < 0) {
-                    // Si la cantidad disminuye, restaurar el stock
-                    const productRef = doc(db, "productos", saleData.productId);
-                    const productSnap = await getDoc(productRef);
-                    if (productSnap.exists()) {
-                        const productData = productSnap.data();
-                        await updateDoc(productRef, {
-                            stock: productData.stock - quantityDifference // resta de un número negativo suma
+                    } else if (quantityDifference < 0) {
+                        // Aumentar stock
+                        transaction.update(productRef, {
+                            [`tallas.${saleData.talla}`]: currentStock - quantityDifference, // Restar negativo suma
+                            stockTotal: (productData.stockTotal || 0) - quantityDifference
                         });
-                    } else {
-                        Swal.fire('Error', 'El producto asociado a esta venta no existe.', 'error');
-                        return;
                     }
-                }
 
-                // Actualizar la venta
-                await updateDoc(saleRef, {
-                    cantidad: newQuantity,
-                    fechaHora: new Date(newDatetime).toISOString()
+                    // Actualizar la venta
+                    transaction.update(saleRef, {
+                        cantidad: newQuantity,
+                        fechaHora: new Date(newDatetime).toISOString(),
+                        precioVenta: parseFloat(newPrecioVenta)
+                    });
                 });
 
-                Swal.fire('Venta actualizada', 'La venta ha sido actualizada exitosamente.', 'success');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Venta actualizada',
+                    text: 'La venta ha sido actualizada exitosamente.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
                 // Recargar productos y ventas
-                loadProducts();
-                loadSales();
+                await loadProducts();
+                await loadSales();
 
                 // Cerrar modal
-                bootstrap.Modal.getInstance(document.getElementById('editSaleModal')).hide();
+                editSaleModal.hide();
             } catch (error) {
-                Swal.fire('Error', 'Hubo un error al actualizar la venta.', 'error');
+                Swal.fire('Error', `Hubo un error al actualizar la venta: ${error.message}`, 'error');
                 console.error("Error al actualizar venta:", error);
             }
         });
 
-        // Confirmar eliminación de venta
+        /**
+         * Confirmar eliminación de venta y restaurar el stock utilizando una transacción
+         */
         document.getElementById('confirmDelete').addEventListener('click', async () => {
             try {
-                const saleRef = doc(db, "ventas", currentSaleId);
-                const saleSnap = await getDoc(saleRef);
-                if (!saleSnap.exists()) {
-                    Swal.fire('Error', 'La venta no existe.', 'error');
-                    return;
-                }
+                await runTransaction(db, async (transaction) => {
+                    const saleRef = doc(db, "ventas", currentSaleId);
+                    const saleSnap = await transaction.get(saleRef);
+                    if (!saleSnap.exists()) {
+                        throw new Error("La venta no existe.");
+                    }
 
-                const saleData = saleSnap.data();
+                    const saleData = saleSnap.data();
 
-                // Restaurar el stock
-                const productRef = doc(db, "productos", saleData.productId);
-                const productSnap = await getDoc(productRef);
-                if (productSnap.exists()) {
+                    const productRef = doc(db, "productos", saleData.productId);
+                    const productSnap = await transaction.get(productRef);
+                    if (!productSnap.exists()) {
+                        throw new Error("El producto asociado a esta venta no existe.");
+                    }
+
                     const productData = productSnap.data();
-                    await updateDoc(productRef, {
-                        stock: productData.stock + saleData.cantidad
+                    const currentStock = productData.tallas[saleData.talla];
+
+                    // Restaurar el stock por talla
+                    transaction.update(productRef, {
+                        [`tallas.${saleData.talla}`]: currentStock + saleData.cantidad,
+                        stockTotal: (productData.stockTotal || 0) + saleData.cantidad
                     });
-                } else {
-                    Swal.fire('Error', 'El producto asociado a esta venta no existe.', 'error');
-                    return;
-                }
 
-                // Eliminar la venta
-                await deleteDoc(saleRef);
+                    // Eliminar la venta
+                    transaction.delete(saleRef);
+                });
 
-                Swal.fire('Venta eliminada', 'La venta ha sido eliminada exitosamente.', 'success');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Venta eliminada',
+                    text: 'La venta ha sido eliminada exitosamente.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
                 // Recargar productos y ventas
-                loadProducts();
-                loadSales();
+                await loadProducts();
+                await loadSales();
 
                 // Cerrar modal
-                bootstrap.Modal.getInstance(document.getElementById('deleteSaleModal')).hide();
+                deleteSaleModal.hide();
             } catch (error) {
-                Swal.fire('Error', 'Hubo un error al eliminar la venta.', 'error');
+                Swal.fire('Error', `Hubo un error al eliminar la venta: ${error.message}`, 'error');
                 console.error("Error al eliminar venta:", error);
             }
         });
 
-        // Cargar productos y ventas al iniciar
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
-            loadSales();
+        /**
+         * Escuchar cambios en el selector de producto para cargar tallas
+         */
+        document.getElementById('productSelect').addEventListener('change', (e) => {
+            const productId = e.target.value;
+            loadSizes(productId);
+        });
+
+        /**
+         * Escuchar cambios en el selector de talla para habilitar los campos de cantidad y fecha
+         */
+        document.getElementById('sizeSelect').addEventListener('change', (e) => {
+            updateFormState();
+        });
+
+        /**
+         * Escuchar cambios en la cantidad vendida para validar el máximo permitido
+         */
+        document.getElementById('quantity').addEventListener('input', (e) => {
+            const quantityInput = e.target;
+            const max = parseInt(quantityInput.max);
+            if (quantityInput.value > max) {
+                quantityInput.value = max;
+            }
+        });
+
+        /**
+         * Cargar productos y ventas al iniciar la página
+         */
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadProducts();
+            await loadSales();
         });
     </script>
 
